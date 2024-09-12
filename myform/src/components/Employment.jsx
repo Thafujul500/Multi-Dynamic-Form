@@ -30,6 +30,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { addEmployment } from "./app/feature/InformationSlice";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { v4 as uuidv4 } from "uuid";
 
 const Employment = () => {
   const Item = styled(Paper)(({ theme }) => ({
@@ -47,11 +48,15 @@ const Employment = () => {
     .object({
       employment: yup.array().of(
         yup.object().shape({
-          companyName: yup.string().required("CompanyName is required"),
+          companyName: yup.string().required("Company name is required"),
           designation: yup.string().required("Designation is required"),
-          companyBusiness: yup.string().required("CompanyBusiness is required"),
-          employeeType: yup.string().required("EmployeeType is required"),
-          companyLocation: yup.string().required("CompanyLocation is required"),
+          companyBusiness: yup
+            .string()
+            .required("Company business is required"),
+          employeeType: yup.string().required("Employee type is required"),
+          companyLocation: yup
+            .string()
+            .required("Company location is required"),
         })
       ),
     })
@@ -62,9 +67,10 @@ const Employment = () => {
     handleSubmit,
     formState: { errors },
     watch,
+    reset,
   } = useForm({
     resolver: yupResolver(schema),
-    defaultValues: { employment: [{}] },
+    defaultValues: { employment: [{ id: uuidv4() }] },
   });
 
   const dispatch = useDispatch();
@@ -73,17 +79,26 @@ const Employment = () => {
   const data = useSelector((state) => state.information.allInformation);
   console.log(data);
 
-  const [forms, setForms] = useState([{}]);
-  const createForm = () => {
-    setForms([...forms, {}]);
-  };
-  const deleteForm = (index) => {
-    console.log("index : ", index);
-    const deletedForm = forms.filter((_, i) => i !== index);
-    console.log(deletedForm);
+  const [forms, setForms] = useState([{ id: uuidv4() }]);
+  console.log(forms);
 
+  const createForm = () => {
+    setForms([...forms, { id: uuidv4() }]);
+  };
+
+  const deleteForm = (id, index) => {
+    const deletedForm = forms.filter((item) => {
+      return item.id !== id;
+    });
     setForms(deletedForm);
-    console.log(forms);
+
+    const updateForms = watch("employment");
+
+    updateForms.splice(index, 1);
+
+    reset({
+      employment: updateForms,
+    });
   };
 
   const onSubmit = (data) => {
@@ -148,7 +163,6 @@ const Employment = () => {
                               <TextField
                                 {...field}
                                 type="text"
-                                required
                                 id="outlined-required"
                                 label="Company Name"
                                 defaultValue=""
@@ -156,6 +170,13 @@ const Employment = () => {
                               />
                             )}
                           />
+                          <Box sx={{ textAlign: "left" }}>
+                            {errors?.employment?.[index].companyName && (
+                              <Typography color="error" m={1} variant="">
+                                {errors.employment[index].companyName.message}
+                              </Typography>
+                            )}
+                          </Box>
                           <Controller
                             name={`employment[${index}].designation`}
                             control={control}
@@ -164,7 +185,6 @@ const Employment = () => {
                               <TextField
                                 {...field}
                                 type="text"
-                                required
                                 id="outlined-required"
                                 label="Designation"
                                 defaultValue=""
@@ -172,6 +192,13 @@ const Employment = () => {
                               />
                             )}
                           />
+                          <Box sx={{ textAlign: "left" }}>
+                            {errors.employment?.[index].designation && (
+                              <Typography variant="p" m={1} color="error">
+                                {errors.employment[index].designation.message}
+                              </Typography>
+                            )}
+                          </Box>
 
                           <Controller
                             name={`employment[${index}].companyBusiness`}
@@ -181,7 +208,6 @@ const Employment = () => {
                               <TextField
                                 {...field}
                                 type="text"
-                                required
                                 id="outlined-required"
                                 label="Company Business"
                                 defaultValue=""
@@ -189,6 +215,16 @@ const Employment = () => {
                               />
                             )}
                           />
+                          <Box sx={{ textAlign: "left" }}>
+                            {errors.employment?.[index].companyBusiness && (
+                              <Typography variant="p" m={1} color="error">
+                                {
+                                  errors.employment[index].companyBusiness
+                                    .message
+                                }
+                              </Typography>
+                            )}
+                          </Box>
                         </Item>
                       </Grid>
 
@@ -225,6 +261,16 @@ const Employment = () => {
                                 </Select>
                               )}
                             />
+                            <Box sx={{ textAlign: "left" }}>
+                              {errors.employment?.[index].employeeType && (
+                                <Typography variant="p" color="error" m={1}>
+                                  {
+                                    errors.employment[index].employeeType
+                                      .message
+                                  }
+                                </Typography>
+                              )}
+                            </Box>
                           </FormControl>
 
                           <Controller
@@ -235,7 +281,6 @@ const Employment = () => {
                               <TextField
                                 {...field}
                                 type="text"
-                                required
                                 id="outlined-required"
                                 label="Company Location"
                                 defaultValue=""
@@ -243,6 +288,16 @@ const Employment = () => {
                               />
                             )}
                           />
+                          <Box sx={{ textAlign: "left" }}>
+                            {errors.employment?.[index].companyLocation && (
+                              <Typography m={1} color="error" variant="p">
+                                {
+                                  errors.employment[index].companyLocation
+                                    .message
+                                }
+                              </Typography>
+                            )}
+                          </Box>
                         </Item>
                       </Grid>
 
@@ -251,8 +306,8 @@ const Employment = () => {
                           variant="contained"
                           color="error"
                           sx={{ margin: " 20px 30px" }}
-                          onClick={() => deleteForm(index)}
                           disabled={forms.length === 1}
+                          onClick={() => deleteForm(item.id, index)}
                         >
                           Delete Form
                         </Button>{" "}

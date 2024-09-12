@@ -20,6 +20,7 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { useDispatch, useSelector } from "react-redux";
 import { addEducationOrTraining } from "./app/feature/InformationSlice";
 import { useNavigate } from "react-router-dom";
+import { v4 as uuidv4 } from "uuid";
 
 const Education = () => {
   const Item = styled(Paper)(({ theme }) => ({
@@ -62,6 +63,7 @@ const Education = () => {
     handleSubmit,
     watch,
     formState: { errors },
+    reset,
   } = useForm({
     resolver: yupResolver(schema),
     defaultValues: {
@@ -73,21 +75,29 @@ const Education = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const [forms, setForms] = useState([{}]);
+  const [forms, setForms] = useState([{ id: uuidv4() }]);
+  console.log(forms);
 
   const createForm = () => {
-    setForms([...forms, {}]);
+    setForms([...forms, { id: uuidv4() }]);
   };
-  const deleteForm = (index) => {
-    console.log(index);
 
-    const deleteForm = forms.filter((_, formIndex) => {
-      console.log(index, formIndex);
-      return formIndex !== index;
+  const deleteForm = (id, index) => {
+    console.log(id);
+
+    const deletedForm = forms.filter((item) => {
+      return item.id !== id;
     });
-    setForms(deleteForm);
+    setForms(deletedForm);
+
+    const updateForms = watch("education");
+
+    updateForms.splice(index, 1);
+
+    reset({
+      education: updateForms,
+    });
   };
-  console.log(forms);
 
   const onSubmit = (data) => {
     dispatch(addEducationOrTraining(data));
@@ -156,7 +166,6 @@ const Education = () => {
                               Level Of Education *{" "}
                             </InputLabel>
                             <Controller
-                              // name={lavelOfEducation${index}}
                               name={`education[${index}].lavelOfEducation`}
                               control={control}
                               defaultValue=""
@@ -175,6 +184,16 @@ const Education = () => {
                                 </Select>
                               )}
                             />
+                            <Box sx={{ textAlign: "left" }}>
+                              {errors?.education?.[index]?.lavelOfEducation && (
+                                <Typography color="error" m={1} variant="p">
+                                  {
+                                    errors.education[index].lavelOfEducation
+                                      .message
+                                  }
+                                </Typography>
+                              )}
+                            </Box>
                           </FormControl>
 
                           <FormControl
@@ -185,7 +204,6 @@ const Education = () => {
                               Exam/Degree *{" "}
                             </InputLabel>
                             <Controller
-                              // name={examOrDegree${index}}
                               name={`education[${index}].examOrDegree`}
                               control={control}
                               defaultValue=""
@@ -202,7 +220,14 @@ const Education = () => {
                                   <MenuItem value="BA">BA</MenuItem>
                                 </Select>
                               )}
-                            />
+                            />{" "}
+                            <Box sx={{ textAlign: "left" }}>
+                              {errors?.education?.[index]?.examOrDegree && (
+                                <Typography color="error" variant="p" m={1}>
+                                  {errors.education[index].examOrDegree.message}
+                                </Typography>
+                              )}
+                            </Box>
                           </FormControl>
 
                           <FormControl
@@ -214,7 +239,6 @@ const Education = () => {
                             </InputLabel>
 
                             <Controller
-                              // name={departmentOrGroup${index}}
                               name={`education[${index}].departmentOrGroup`}
                               control={control}
                               defaultValue=""
@@ -229,10 +253,20 @@ const Education = () => {
                                   <MenuItem value="science">Science</MenuItem>
                                   <MenuItem value="commarce">Commarce</MenuItem>
                                   <MenuItem value="arts">Arts</MenuItem>
-                                  <MenuItem value="Others">Others</MenuItem>
+                                  <MenuItem value="others">Others</MenuItem>
                                 </Select>
                               )}
                             />
+                            <Box sx={{ textAlign: "left" }}>
+                              {errors?.education?.[index].departmentOrGroup && (
+                                <Typography color="error" m={1} variant="p">
+                                  {
+                                    errors.education[index].departmentOrGroup
+                                      .message
+                                  }
+                                </Typography>
+                              )}
+                            </Box>
                           </FormControl>
 
                           <FormControl
@@ -244,7 +278,6 @@ const Education = () => {
                             </InputLabel>
 
                             <Controller
-                              // name={board${index}}
                               name={`education[${index}].board`}
                               control={control}
                               defaultValue=""
@@ -267,6 +300,13 @@ const Education = () => {
                                 </Select>
                               )}
                             />
+                            <Box sx={{ textAlign: "left" }}>
+                              {errors?.education?.[index]?.board && (
+                                <Typography color="error" m={1} variant="p">
+                                  {errors.education[index].board.message}
+                                </Typography>
+                              )}
+                            </Box>
                           </FormControl>
                         </Item>
                       </Grid>
@@ -274,14 +314,12 @@ const Education = () => {
                       <Grid item xs={6}>
                         <Item sx={{ padding: "20px" }}>
                           <Controller
-                            // name={InstituteName${index}}
                             name={`education[${index}].InstituteName`}
                             control={control}
                             defaultValue=""
                             render={({ field }) => (
                               <TextField
                                 {...field}
-                                required
                                 id="outlined-required"
                                 label="Institute Name"
                                 defaultValue=""
@@ -289,8 +327,14 @@ const Education = () => {
                               />
                             )}
                           />
+                          <Box sx={{ textAlign: "left" }}>
+                            {errors?.education?.[index]?.InstituteName && (
+                              <Typography color="error" m={1} variant="p">
+                                {errors.education[index].InstituteName.message}
+                              </Typography>
+                            )}
+                          </Box>
                           <Controller
-                            // name={result${index}}
                             name={`education[${index}].result`}
                             control={control}
                             defaultValue=""
@@ -298,7 +342,6 @@ const Education = () => {
                               <TextField
                                 {...field}
                                 type="number"
-                                required
                                 id="outlined-required"
                                 label="Result"
                                 defaultValue=""
@@ -306,8 +349,14 @@ const Education = () => {
                               />
                             )}
                           />
+                          <Box sx={{ textAlign: "left" }}>
+                            {errors?.education?.[index]?.result && (
+                              <Typography color="error" m={1} variant="p">
+                                {errors.education[index].result.message}
+                              </Typography>
+                            )}
+                          </Box>
                           <Controller
-                            // name={year${index}}
                             name={`education[${index}].year`}
                             control={control}
                             defaultValue=""
@@ -315,7 +364,6 @@ const Education = () => {
                               <TextField
                                 {...field}
                                 type="number"
-                                required
                                 id="outlined-required"
                                 label="Year"
                                 defaultValue=""
@@ -323,6 +371,13 @@ const Education = () => {
                               />
                             )}
                           />
+                          <Box sx={{ textAlign: "left" }}>
+                            {errors?.education?.[index]?.year && (
+                              <Typography color="error" m={1} variant="p">
+                                {errors.education[index].year.message}
+                              </Typography>
+                            )}
+                          </Box>
 
                           <FormControl
                             fullWidth
@@ -333,7 +388,6 @@ const Education = () => {
                             </InputLabel>
 
                             <Controller
-                              // name={duration${index}}
                               name={`education[${index}].duration`}
                               control={control}
                               defaultValue=""
@@ -355,6 +409,13 @@ const Education = () => {
                                 </Select>
                               )}
                             />
+                            <Box sx={{ textAlign: "left" }}>
+                              {errors?.education?.[index]?.duration && (
+                                <Typography color="error" variant="p">
+                                  {errors.education[index].duration.message}
+                                </Typography>
+                              )}
+                            </Box>
                           </FormControl>
                         </Item>
                       </Grid>
@@ -363,7 +424,7 @@ const Education = () => {
                           variant="contained"
                           color="error"
                           sx={{ margin: " 20px 30px" }}
-                          onClick={() => deleteForm(index)}
+                          onClick={() => deleteForm(item.id, index)}
                           disabled={forms.length === 1}
                         >
                           Delete Form
@@ -373,7 +434,6 @@ const Education = () => {
                   </Box>
                 );
               })}
-
               <Box sx={{ textAlign: "center" }}>
                 <Button
                   variant="contained"

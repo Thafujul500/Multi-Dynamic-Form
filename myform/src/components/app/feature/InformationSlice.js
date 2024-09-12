@@ -13,7 +13,7 @@ export const informationSlice = createSlice({
   reducers: {
     addPersonalInformation: (state, action) => {
       const personalData = action.payload;
-      console.log("personal reduces", personalData);
+      console.log(personalData);
 
       state.allInformation.personalInfomarion.push(personalData);
     },
@@ -23,6 +23,8 @@ export const informationSlice = createSlice({
     },
     addEmployment: (state, action) => {
       const employmentData = action.payload.employment;
+      console.log(employmentData);
+
       state.allInformation.employment.push(...employmentData);
     },
   },

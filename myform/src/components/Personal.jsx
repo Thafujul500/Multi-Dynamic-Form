@@ -93,7 +93,6 @@ const Personal = () => {
                   render={({ field }) => (
                     <TextField
                       {...field}
-                      required
                       id="outlined-required"
                       label="First Name"
                       defaultValue=""
@@ -101,7 +100,13 @@ const Personal = () => {
                     />
                   )}
                 />
-                {/* {errors.firstName && <p>{errors.firstName.message}</p>} */}
+                <Box sx={{ textAlign: "left" }}>
+                  {errors.firstName && (
+                    <Typography color="error" m={1} variant="p">
+                      {errors.firstName.message}
+                    </Typography>
+                  )}
+                </Box>
 
                 <Controller
                   name="lastName"
@@ -109,7 +114,6 @@ const Personal = () => {
                   defaultValue=""
                   render={({ field }) => (
                     <TextField
-                      required
                       {...field}
                       id="outlined-required"
                       label="Last Name"
@@ -118,6 +122,13 @@ const Personal = () => {
                     />
                   )}
                 />
+                <Box sx={{ textAlign: "left" }}>
+                  {errors.lastName && (
+                    <Typography color="error" m={1} variant="p">
+                      {errors.lastName.message}
+                    </Typography>
+                  )}
+                </Box>
 
                 <Controller
                   name="fatherName"
@@ -126,7 +137,6 @@ const Personal = () => {
                   render={({ field }) => (
                     <TextField
                       {...field}
-                      required
                       id="outlined-required"
                       label="Father's Name"
                       defaultValue=""
@@ -134,6 +144,13 @@ const Personal = () => {
                     />
                   )}
                 />
+                <Box sx={{ textAlign: "left" }}>
+                  {errors.fatherName && (
+                    <Typography color="error" m={1} variant="p">
+                      {errors.fatherName.message}
+                    </Typography>
+                  )}
+                </Box>
 
                 <Controller
                   name="motherName"
@@ -142,7 +159,6 @@ const Personal = () => {
                   render={({ field }) => (
                     <TextField
                       {...field}
-                      required
                       id="outlined-required"
                       label="Mother's Name"
                       defaultValue=""
@@ -150,6 +166,13 @@ const Personal = () => {
                     />
                   )}
                 />
+                <Box sx={{ textAlign: "left" }}>
+                  {errors.motherName && (
+                    <Typography color="error" m={1} variant="p">
+                      {errors.motherName.message}
+                    </Typography>
+                  )}
+                </Box>
               </Item>
             </Grid>
             <Grid item xs={6}>
@@ -177,6 +200,13 @@ const Personal = () => {
                       </Select>
                     )}
                   />
+                  <Box sx={{ textAlign: "left" }}>
+                    {errors.gender && (
+                      <Typography color="error" m={1} variant="p">
+                        {errors.gender.message}
+                      </Typography>
+                    )}
+                  </Box>
                 </FormControl>
                 <FormControl fullWidth sx={{ margin: "10px", width: "100%" }}>
                   <InputLabel id="demo-simple-select-label">
@@ -202,6 +232,14 @@ const Personal = () => {
                       </Select>
                     )}
                   />
+
+                  <Box sx={{ textAlign: "left" }}>
+                    {errors.maritalStatus && (
+                      <Typography color="error" m={1} variant="p">
+                        {errors.maritalStatus.message}
+                      </Typography>
+                    )}
+                  </Box>
                 </FormControl>
 
                 <Controller
@@ -212,7 +250,6 @@ const Personal = () => {
                     <TextField
                       type="email"
                       {...field}
-                      required
                       id="outlined-required"
                       label="Email"
                       defaultValue=""
@@ -220,6 +257,14 @@ const Personal = () => {
                     />
                   )}
                 />
+                <Box sx={{ textAlign: "left" }}>
+                  {errors.email && (
+                    <Typography color="error" m={1} variant="p">
+                      {errors.email.message}
+                    </Typography>
+                  )}
+                </Box>
+
                 <Controller
                   name="nationalID"
                   control={control}
@@ -228,7 +273,6 @@ const Personal = () => {
                     <TextField
                       type="number"
                       {...field}
-                      required
                       id="outlined-required"
                       label="Nation ID"
                       defaultValue=""
@@ -236,6 +280,14 @@ const Personal = () => {
                     />
                   )}
                 />
+
+                <Box sx={{ textAlign: "left" }}>
+                  {errors.nationalID && (
+                    <Typography color="error" m={1} variant="p">
+                      {errors.nationalID.message}
+                    </Typography>
+                  )}
+                </Box>
               </Item>
             </Grid>
             <Button
